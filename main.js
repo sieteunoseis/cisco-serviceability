@@ -19,7 +19,7 @@ const XML_GET_SERVICE_STATUS = (services) => `<soapenv:Envelope xmlns:soapenv="h
 <soapenv:Header/>
 <soapenv:Body>
    <soap:soapGetServiceStatus>
-      <soap:ServiceStatus>${services}</soap:ServiceStatus>
+      ${services}
    </soap:soapGetServiceStatus>
 </soapenv:Body>
 </soapenv:Envelope>`;
@@ -108,9 +108,9 @@ const XML_DO_SERVICE_DEPLOYMENT_NO_DB_UPDATE = (productId, deployType, services)
 // --- Helper to build service list XML ---
 const buildServiceListXml = (services) => {
   if (Array.isArray(services)) {
-    return services.map((s) => `<soap:ServiceList>${s}</soap:ServiceList>`).join("");
+    return `<soap:ServiceList>${services.map((s) => `<soap:item>${s}</soap:item>`).join("")}</soap:ServiceList>`;
   }
-  return `<soap:ServiceList>${services}</soap:ServiceList>`;
+  return `<soap:ServiceList><soap:item>${services}</soap:item></soap:ServiceList>`;
 };
 
 // --- Utility Functions ---
@@ -200,7 +200,8 @@ class controlCenterService {
 
     let response = await fetch(`https://${this._HOST}:8443/controlcenterservice2/services/${endpoint}`, options);
 
-    let cookie = response.headers.get("set-cookie") ? response.headers.get("set-cookie") : "";
+    let cookies = response.headers.getSetCookie ? response.headers.getSetCookie() : [];
+    let cookie = cookies.length > 0 ? cookies.join("; ") : "";
     if (cookie) {
       this.setCookie(cookie);
     }
@@ -251,9 +252,11 @@ class controlCenterService {
   async getServiceStatus(services = "") {
     let serviceStr = "";
     if (Array.isArray(services)) {
-      serviceStr = services.map((s) => `<soap:ServiceName>${escapeXml(s)}</soap:ServiceName>`).join("");
+      serviceStr = services.map((s) => `<soap:ServiceStatus>${escapeXml(s)}</soap:ServiceStatus>`).join("");
     } else if (services) {
-      serviceStr = `<soap:ServiceName>${escapeXml(services)}</soap:ServiceName>`;
+      serviceStr = `<soap:ServiceStatus>${escapeXml(services)}</soap:ServiceStatus>`;
+    } else {
+      serviceStr = `<soap:ServiceStatus></soap:ServiceStatus>`;
     }
 
     let xml = XML_GET_SERVICE_STATUS(serviceStr);
