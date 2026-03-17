@@ -1,0 +1,45 @@
+{
+  "name": "cisco-serviceability",
+  "version": "1.0.0",
+  "description": "A library to interact with Cisco Control Center Services API via SOAP",
+  "main": "main.js",
+  "module": "main.mjs",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./main.mjs",
+      "require": "./main.js",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=test node ./test/tests.js",
+    "development": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=development node ./test/tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sieteunoseis/cisco-serviceability.git"
+  },
+  "keywords": [
+    "cisco",
+    "node",
+    "serviceability",
+    "cucm",
+    "vos",
+    "control-center"
+  ],
+  "author": "sieteunoseis <jeremy.worden@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sieteunoseis/cisco-serviceability/issues"
+  },
+  "homepage": "https://github.com/sieteunoseis/cisco-serviceability#readme",
+  "dependencies": {
+    "fetch-retry": "^6.0.0",
+    "xml2js": "^0.6.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.0.0",
+    "envalid": "^8.1.0"
+  }
+}
